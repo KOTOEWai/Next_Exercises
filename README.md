@@ -237,5 +237,76 @@ This page runs on the server, fetches data, and returns rendered HTML.
 | Initial load         | Slower               | Faster                          |
 | Best for             | Dashboards, SPA apps | Blogs, ecommerce, dynamic pages |
 
+---
+
+## ⚡ Suspense + SSR
+
+### What is Suspense?
+
+React **Suspense** allows a component to **pause rendering** until some asynchronous operation (like data fetching) completes. While waiting, a **fallback UI** (spinner, skeleton, or text) is shown.
+
+Example:
+
+```tsx
+<Suspense fallback={<p>Loading...</p>}>
+  <Profile />
+</Suspense>
+```
+
+### Suspense + SSR in Next.js
+
+* Server streams HTML to the client in chunks
+* While data is loading, **fallback UI** renders
+* Once ready, React hydrates the component
+
+Benefits:
+
+* Faster perceived load
+* Better UX
+* Works with Server Components and async data fetching
+
+### Example
+
+```tsx
+import { Suspense } from "react";
+import UserStats from "./UserStats";
+
+export default function DashboardPage() {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <Suspense fallback={<p>Loading stats...</p>}>
+        <UserStats />
+      </Suspense>
+    </div>
+  );
+}
+
+// UserStats.tsx
+export default async function UserStats() {
+  const res = await fetch("https://api.example.com/stats");
+  const stats = await res.json();
+  return <pre>{JSON.stringify(stats, null, 2)}</pre>;
+}
+```
+
+### Key Points
+
+| Feature         | Suspense + SSR             |
+| --------------- | -------------------------- |
+| Loading         | Fallback UI first          |
+| Data fetch      | Server-side streaming      |
+| Perceived speed | Faster                     |
+| UX              | Smooth, skeletons/spinners |
+
+### When to Use Suspense + SSR
+
+* Dashboards
+* Product lists
+* Large pages with async components
+* Dynamic data-heavy pages
+
+---
+
 
 
