@@ -173,3 +173,70 @@ CSR rendering means:
 It is perfect for **dynamic, interactive, logged-in experiences**.
 
 
+
+
+## 🖥️ Server-Side Rendering (SSR)
+
+### What is SSR?
+
+Server-Side Rendering (SSR) means the page is rendered **on the server** for every request. The server prepares the HTML, sends it to the browser, and then React hydrates the page on the client.
+
+---
+
+### How SSR Works
+
+1. The user requests a URL
+2. The Next.js server fetches required data
+3. The server renders the component into HTML
+4. HTML is sent to the browser
+5. Browser hydrates the page with React
+
+---
+
+### When to Use SSR
+
+Use SSR when:
+
+* You need fresh data on every request
+* SEO is important
+* You require server‑validated access (e.g., authenticated dashboard)
+* Dynamic content changes frequently
+
+---
+
+### SSR in Next.js App Router
+
+Server Components in the App Router are **SSR by default**.
+
+Example:
+
+```ts
+import { getProducts } from "@/lib/api";
+
+export default async function ProductsPage() {
+  const products = await getProducts();
+
+  return (
+    <div>
+      <h1>Products List</h1>
+      <pre>{JSON.stringify(products, null, 2)}</pre>
+    </div>
+  );
+}
+```
+
+This page runs on the server, fetches data, and returns rendered HTML.
+
+---
+
+### CSR vs SSR Summary
+
+| Feature              | CSR                  | SSR                             |
+| -------------------- | -------------------- | ------------------------------- |
+| Where render happens | Browser              | Server                          |
+| SEO                  | Weak                 | Strong                          |
+| Initial load         | Slower               | Faster                          |
+| Best for             | Dashboards, SPA apps | Blogs, ecommerce, dynamic pages |
+
+
+
