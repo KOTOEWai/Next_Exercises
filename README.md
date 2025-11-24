@@ -172,13 +172,4 @@ CSR rendering means:
 
 It is perfect for **dynamic, interactive, logged-in experiences**.
 
----
 
-If you want, I can also create:
-
-* An SSR README
-* An ISR README
-* A full "Rendering in Next.js" guide
-* CSR diagram as an image
-
-Just tell me!
