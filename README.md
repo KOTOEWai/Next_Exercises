@@ -174,8 +174,7 @@ It is perfect for **dynamic, interactive, logged-in experiences**.
 
 
 
-
-## 🖥️ Server-Side Rendering (SSR)
+# How Server-Side Rendering (SSR) Works in Next.js
 
 ### What is SSR?
 
