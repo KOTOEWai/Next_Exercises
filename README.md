@@ -169,11 +169,11 @@ CSR rendering means:
 
 It is perfect for **dynamic, interactive, logged-in experiences**.
 
-
+---
 
 # How Server-Side Rendering (SSR) Works in Next.js
 
-### What is SSR?
+### 📌 What is SSR?
 
 Server-Side Rendering (SSR) means the page is rendered **on the server** for every request. The server prepares the HTML, sends it to the browser, and then React hydrates the page on the client.
 
