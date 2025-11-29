@@ -1,7 +1,4 @@
 # How Client-Side Rendering (CSR) Works in Next.js
-
-This README explains **Client-Side Rendering (CSR)** in a simple and practical way. It is designed for students, beginners, and anyone who wants an easy guide to how CSR works in a real Next.js application.
-
 ---
 
 ## 📌 What is CSR?
