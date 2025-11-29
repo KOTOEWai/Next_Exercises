@@ -236,7 +236,7 @@ This page runs on the server, fetches data, and returns rendered HTML.
 
 ---
 
-## ⚡ Suspense + SSR
+# ⚡ Suspense + SSR
 
 ### What is Suspense?
 
