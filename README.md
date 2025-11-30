@@ -359,6 +359,42 @@ Client Components hydrate (if any).
 
 ---
 
+## Major Types of Components in RSC
+```js
+| Component                 | Meaning                                                                                                                                         |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Server Component (SC)** | React component ကို **server မှာသာ render** လုပ်ပြီး HTML / React Flight Payload (RFP) ပုံစံ serialize → client ပို့သည်။ Client-side JS မပါဘူး။ |
+| **Client Component (CC)** | React component ကို server မှာ **initial render** လုပ်ပြီး HTML + JS bundle reference serialize → browser hydrate → interactive UI ဖြစ်စေသည်။   |
 
+*Rendering Location
+
+| Component | Execution                                    |
+| --------- | -------------------------------------------- |
+| SC        | Server only (fetch, DB, conditional render)  |
+| CC        | Server (first render) + Browser (hydrate JS) |
+
+
+* Key: SC = server-only logic, CC = interactive logic + client JS bundle
+
+
+
+```
+
+## Visual Flow (Deep Insight)
+
+```
+[Server Components]                   [Client Components]
+Server render & resolve data           Server render initial HTML
+        │                                   │
+        ▼                                   ▼
+  RFP payload serialized                RFP payload + JS bundle
+        │                                   │
+        ▼                                   ▼
+Browser receives passive HTML           Browser downloads JS bundle
+        │                                   │
+        ▼                                   ▼
+  Visible UI (non-interactive)       Browser hydrates → interactive UI
+
+```
 
 
