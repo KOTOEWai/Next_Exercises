@@ -8,11 +8,22 @@ export const metadata:Metadata = {
 }
 
 
+
 export default async function Aboutpage() {
-  await new Promise((resolve)=>setTimeout(resolve,500))
-  
+    const res = await fetch("http://localhost:3000/api/book", {
+     cache: "no-store",
+     });
+
+     const books = await res.json();
   return (
     <>
+     <ul>
+        {books.map((book:any) => (
+          <li key={book.id}>
+            {book.title} - {book.author} ({book.year})
+          </li>
+        ))}
+      </ul>
     <div>page</div>
     <Gotoback para="Go to Home" page=""/>
     <Gotoback para="Go to Blog" page="blog"/>

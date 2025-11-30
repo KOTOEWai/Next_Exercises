@@ -17,6 +17,11 @@ export default  function Home() {
       <Link href={'/blog/2'} >Go to blog 2</Link>
       <Link href={'/blog/3'} replace>Go to blog 3</Link>
       </div>
+      <div className="flex flex-col gap-3">
+      <Link href={'/RSC'} >Go to react server component</Link>
+      <Link href={'/ClientSide'} >Go to client side rendering</Link>
+      <Link href={'/ServerSide'} >Go to server side rendering</Link>
+      </div>
      </div>
   );
 }
