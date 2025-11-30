@@ -304,6 +304,61 @@ export default async function UserStats() {
 * Dynamic data-heavy pages
 
 ---
-### Hello
+# ✅ What is a React Server Component (RSC)?
+
+React Server Components (RSC) are React components that run on the server instead of the browser.
+In Next.js 13/14/15, components inside the app/ directory are Server Components by default.
+
+## 🧠 Why do we need Server Components?
+
+Because they help you:
+
+✔️ Load data directly on the server (no fetching on the client)
+✔️ Reduce JavaScript sent to the browser
+✔️ Improve performance
+✔️ Keep sensitive code (API keys, DB queries) safely on the server
+
+---
+## You write a component, but it never runs in the browser — only on the server.
+
+```js
+// Server Component (default)
+export default async function Page() {
+  const books = await fetch("https://api.example.com/books").then(r => r.json());
+
+  return (
+    <div>
+      <h1>Books</h1>
+      {books.map(book => <p key={book.id}>{book.title}</p>)}
+    </div>
+  );
+}
+
+```
+* This code runs on the server, then React sends the RSC payload to the browser.
+---
+## ✅ React Server Component Lifecycle (Short List)
+
+1. Request comes in
+User visits a page or navigates.
+
+2. Server runs the RSC
+Component code runs on the server.
+fetch(), DB queries happen here.
+
+3. React generates a special RSC payload
+Not HTML.
+A lightweight “UI instructions + data” package.
+
+4. Payload is sent to the browser
+Browser receives the instructions.
+
+5. Browser updates the UI
+Server-rendered HTML shows.
+Client Components hydrate (if any).
+
+---
+
+
 
 
