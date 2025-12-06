@@ -396,6 +396,221 @@ Browser receives passive HTML           Browser downloads JS bundle
   Visible UI (non-interactive)       Browser hydrates → interactive UI
 
 ```
+# Rendering in Next.js (App Router)
+
+## 1. 🚀 What is Rendering?
+
+Rendering = How Next.js converts your React components into HTML to show in the browser.
+
+Next.js supports **multiple rendering strategies**:
+
+* Server Components (RSC) — default
+* Client Components — optional
+* Static Rendering (SSG)
+* Dynamic Rendering (SSR)
+* Streaming SSR
+* ISR (Incremental Static Regeneration)
+
+---
+
+## 2. 🧠 React Server Components (RSC) — *Default*
+
+Server Components run **on the server**.
+
+* No `use client` required
+* No browser JS bundle
+* Fast + scalable
+* Good for data fetching
+
+**Example:**
+
+```js
+export default async function Page() {
+  const data = await getData();
+  return <div>{data.title}</div>;
+}
+```
+
+---
+
+## 3. 🌐 Client Components — *When you need interactivity*
+
+Use `"use client"` for:
+
+* Event listeners (onClick, onChange)
+* useState, useEffect
+* Client-side libraries
+
+**Example:**
+
+```js
+"use client";
+
+export default function Button() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
+---
+
+## 4. 🏗️ Static Rendering (SSG)
+
+Static generation happens **at build time**.
+
+Used for:
+
+* Public marketing pages
+* Blogs
+* Docs
+
+Next.js caches the result.
+
+**Example:**
+
+```js
+export const dynamic = "force-static";
+```
+
+Or automatic if:
+
+* No dynamic data
+* No cookies/session
+
+---
+
+## 5. ⚡ Dynamic Rendering (SSR)
+
+Dynamic rendering happens **per request**.
+
+Used for:
+
+* Auth required pages
+* User dashboards
+* Pages depending on cookies/searchParams
+
+**Enable SSR:**
+
+```js
+export const dynamic = "force-dynamic";
+```
+
+Or automatic if:
+
+* Uses `searchParams`
+* Uses cookies, headers
+* Database queries per request
+
+---
+
+## 6. 🔄 Incremental Static Regeneration (ISR)
+
+ISR updates static pages **in the background**.
+
+**Example:**
+
+```js
+export const revalidate = 60; // regenerate every 60 sec
+```
+
+---
+
+## 7. 📡 Streaming SSR
+
+Streaming sends HTML **in chunks** to the browser.
+
+* Improves Time-To-First-Byte (TTFB)
+* Works with React Suspense
+
+**Example:**
+
+```jsx
+<Suspense fallback={<Loading />}>
+  <UserData />
+</Suspense>
+```
+
+Used automatically in the App Router.
+
+---
+
+## 8. 🎯 Summary Table
+
+| Rendering Type              | When It Runs | Good For                        | Notes               |
+| --------------------------- | ------------ | ------------------------------- | ------------------- |
+| **Server Components**       | Server       | Data fetching, fast performance | Default             |
+| **Client Components**       | Browser      | Interactivity                   | Need `use client`   |
+| **Static Rendering**        | Build time   | Blogs, docs, static pages       | Fast + cached       |
+| **Dynamic Rendering (SSR)** | Per request  | Auth, dashboards                | Reads cookies       |
+| **ISR**                     | Background   | Semi-static pages               | `revalidate` needed |
+| **Streaming**               | Per request  | Large pages, slow data          | Uses Suspense       |
+
+---
+
+## 9. 📁 How Next.js Chooses Rendering Automatically
+
+### Static if:
+
+* No dynamic data
+* No cookies
+* No request-time dependencies
+
+### Dynamic if:
+
+* Page reads cookies
+* Uses `searchParams`
+* Uses server actions
+* Queries database each request
+
+---
+
+## 10. 🔧 Manual Controls
+
+### Force Static
+
+```js
+export const dynamic = 'force-static';
+```
+
+### Force Dynamic
+
+```js
+export const dynamic = 'force-dynamic';
+```
+
+### Revalidate
+
+```js
+export const revalidate = 10;
+```
+
+---
+
+## 11. 🧩 Server + Client Hybrid
+
+You can mix both:
+
+```
+app/dashboard/page.js        // Server Component
+app/dashboard/Button.js      // Client Component
+```
+
+Server components fetch data → Client components handle UI.
+
+---
+
+## 12. 🏁 Final Summary
+
+* Next.js App Router uses **React Server Components** by default.
+* Choose Static Rendering for simple pages.
+* Use Dynamic Rendering when reading request-time data.
+* ISR lets you update static pages automatically.
+* Streaming improves performance for slow-loading sections.
+* Mix Server + Client Components for best developer experience.
+
+---
+
+
 
 
 # Routing in Next.js
