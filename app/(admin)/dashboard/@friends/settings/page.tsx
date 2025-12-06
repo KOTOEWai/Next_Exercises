@@ -2,7 +2,7 @@ import React from 'react'
 
 function page() {
   return (
-    <div>Posts Setting page</div>
+    <div>Friends Setting page</div>
   )
 }
 

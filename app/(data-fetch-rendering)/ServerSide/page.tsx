@@ -5,7 +5,8 @@ type Book = {
   author: string;
   year: number;
 };
-
+import { ServersideFunction } from "@/lib/server-util";
+//import { clientSideFunction } from "@/lib/client-util"; 
 export const dynamic = "force-dynamic";
 
 async function getBooks(): Promise<Book[]> {
@@ -20,6 +21,8 @@ async function getBooks(): Promise<Book[]> {
 
 export default async function BooksPage() {
   const books = await getBooks(); // 🟢 Server fetch (SSR)
+  const res = await ServersideFunction();
+  //const res1 = await clientSideFunction();
  
   return (
     <div>
@@ -32,6 +35,8 @@ export default async function BooksPage() {
           </li>
         ))}
       </ul>
+      <p>Server route{res}</p>
+   
     </div>
   );
 }

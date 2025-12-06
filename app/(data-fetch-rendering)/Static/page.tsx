@@ -19,13 +19,9 @@ type Book = {
   year: number;
 };
 
-
-
-
-
 export default async function BooksPage() {
   const books = await getBooks(); 
- 
+  
   return (
     <div>
       <h1>Book List (SSR)</h1>

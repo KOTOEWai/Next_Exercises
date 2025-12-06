@@ -12,7 +12,7 @@ type Book = {
 export default function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-
+ 
   useEffect(() => {
     fetch("/api/book") // must match API route
       .then((res) => res.json())
@@ -38,6 +38,7 @@ export default function BooksPage() {
           </li>
         ))}
       </ul>
+  
     </div>
   );
 }

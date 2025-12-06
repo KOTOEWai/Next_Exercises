@@ -1,0 +1,97 @@
+Dynamic Functions များ၏ အဓိက သဘောတရား
+
+Next.js ဟာ Default အားဖြင့် Page တွေကို Static ဖြစ်အောင် ကြိုးစားပါတယ်။
+သို့သော်၊ Page ရဲ့ Output ဟာ User ရဲ့ Request (သို့မဟုတ်) အချိန်ပေါ် မူတည်ပြီး ပြောင်းလဲနေဖို့ လိုအပ် တဲ့အခါ Dynamic Functions တွေကို သုံးရပါတယ်။
+
+🔸 အဓိက အကျိုးသက်ရောက်မှု (Opt-Out of Caching)
+Static Rendering ကို ပယ်ဖျက်ခြင်း:
+
+Next.js Server Components တွေဟာ Data Fetching တွေကို Automatically Cache လုပ်ထားနိုင်ပေမဲ့၊
+Dynamic Functions တစ်ခုခုကို သုံးလိုက်တာနဲ့ Caching ကို ပယ်ဖျက် လိုက်ပြီး၊ Request အသစ်တိုင်းအတွက် Code တွေကို
+Server မှာ အသစ်ပြန်လည် တွက်ချက် (Re-calculate) စေပါတယ်။
+
+
+Request Time မှာသာ အလုပ်လုပ်ခြင်း:
+
+Build Time မှာ HTML ထုတ်လုပ်ခြင်း မရှိတော့ဘဲ၊ User က Page ကို ဝင်ရောက်ကြည့်ရှုတဲ့ Request Time မှာမှသာ
+ Server မှာ Page ကို Render လုပ်တော့မှာ ဖြစ်ပါတယ်။
+
+
+
+ အဓိက Dynamic Functions များ
+Next.js မှာ Dynamic ဖြစ်စေတဲ့ အဓိက Functions များမှာ အောက်ပါတို့ ပါဝင်ပါတယ်။
+
+
+A. headers()
+ရည်ရွယ်ချက်: User က ပို့လိုက်တဲ့ HTTP Request ရဲ့ Headers တွေကို ဖတ်ဖို့ သုံးပါတယ်။
+ Headers ထဲမှာ User ရဲ့ Locale, User-Agent (Browser အမျိုးအစား) စတဲ့ အချက်အလက်တွေ ပါဝင်ပါတယ်။
+Dynamic ဖြစ်စေသော အကြောင်း: Header တွေဟာ Request တစ်ခုနဲ့တစ်ခု မတူညီနိုင်တဲ့အတွက်၊
+ Header ကို ဖတ်လိုက်တာနဲ့ Page ရဲ့ Output ဟာ Request ပေါ်မူတည်ပြီး ပြောင်းလဲသွားနိုင်တယ်လို့ Next.js က ယူဆပါတယ်။
+
+JavaScript
+
+import { headers } from 'next/headers';
+
+export default function MyPage() {
+  // ဤ function ကို ခေါ်ယူလိုက်သောကြောင့် ဤ Page သည် Dynamic ဖြစ်သွားသည်
+  const headersList = headers();
+  const userAgent = headersList.get('user-agent');
+  // ...
+}
+
+
+B. cookies()
+ရည်ရွယ်ချက်: User ရဲ့ Request မှာ ပါလာတဲ့ Cookies တွေကို ဖတ်ဖို့ သုံးပါတယ်။
+ Cookies တွေဟာ User Session, Shopping Cart Status စတဲ့ User-specific အချက်အလက်တွေကို သိမ်းထားပါတယ်။
+
+Dynamic ဖြစ်စေသော အကြောင်း: Cookies တွေဟာ User တစ်ယောက်ချင်းစီအတွက် သီးသန့် ဖြစ်နေတဲ့အတွက်၊ 
+Output ကို Static (အများသုံး) အဖြစ် ထုတ်လုပ်ထားလို့ မရနိုင်တော့ပါဘူး။
+
+JavaScript
+
+import { cookies } from 'next/headers';
+
+export default function MyPage() {
+  // ဤ function ကို ခေါ်ယူလိုက်သောကြောင့် ဤ Page သည် Dynamic ဖြစ်သွားသည်
+  const cookieStore = cookies();
+  const sessionId = cookieStore.get('session-id')?.value;
+  // ...
+}
+
+
+
+C. searchParams (Page Component မှတဆင့်)
+
+ရည်ရွယ်ချက်: URL မှာပါတဲ့ Query Parameters တွေကို ဖတ်ဖို့ သုံးပါတယ်။ (ဥပမာ- /products?sort=price&page=2)
+
+Dynamic ဖြစ်စေသော အကြောင်း: page.js Component ရဲ့ props မှာ searchParams ကို လက်ခံပြီး သုံးစွဲတဲ့အခါ၊
+ URL က ပြောင်းလဲနိုင်တဲ့အတွက် Static Cache ကို ပယ်ဖျက်ဖို့ လိုအပ်လာပါတယ်။
+
+JavaScript
+
+// app/products/page.js
+export default function ProductsPage({ searchParams }) {
+  // searchParams ကို သုံးလိုက်ခြင်းကြောင့် Dynamic ဖြစ်သွားသည်
+  const sortBy = searchParams.sort || 'default';
+  // ...
+}
+
+
+D. unstable_noStore()
+
+ရည်ရွယ်ချက်: Data Fetching Function တစ်ခုကို Caching လုံးဝ မလုပ်ဖို့ Next.js ကို အတိအကျ အမိန့်ပေးဖို့ သုံးပါတယ်။
+Dynamic ဖြစ်စေသော အကြောင်း: ဒီ Function ကို သုံးတဲ့နေရာကနေ စပြီး၊ အဲဒီ Component ရဲ့ Parent Segment အထိ
+ Dynamic Rendering ကို တွန်းအားပေးပါတယ်။
+
+
+၃။ Dynamic Functions ကို အသုံးပြုရခြင်း၏ ရည်ရွယ်ချက်
+
+Dynamic Functions တွေကို သုံးစွဲခြင်းဟာ Next.js ရဲ့ Performance Optimization ကို စွန့်လွှတ်ရတာ ဖြစ်ပေမဲ့၊ အောက်ပါ အခြေအနေတွေမှာ မဖြစ်မနေ လိုအပ်ပါတယ်။
+Authentication/Authorization: User က ဝင်ရောက်ထားခြင်း ရှိ၊ မရှိ စစ်ဆေးပြီး Content ကို ပြောင်းလဲဖို့ (cookies() လိုအပ်)။
+
+
+A/B Testing: User Header ပေါ်မူတည်ပြီး UI ဗားရှင်း ပြောင်းလဲပြသဖို့ (headers() လိုအပ်)။
+
+Real-time Data: Data ဟာ အမြဲတမ်း နောက်ဆုံးပေါ် ဖြစ်နေဖို့ လိုအပ်တဲ့အခါ (unstable_noStore() လိုအပ်)။
+
+Next.js မှာ Dynamic Functions တွေကို သတိထားပြီး သုံးစွဲခြင်းဖြင့် Performance နဲ့ Flexibility အကြား ဟန်ချက်ညီအောင် တည်ဆောက်နိုင်မှာ ဖြစ်ပါတယ်။

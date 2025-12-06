@@ -398,3 +398,222 @@ Browser receives passive HTML           Browser downloads JS bundle
 ```
 
 
+# Routing in Next.js
+
+This README explains how routing works in **Next.js (App Router)** — including file-based routing, dynamic routes, nested layouts, route groups, and more.
+
+---
+
+## 1. 📁 File-Based Routing
+
+Next.js automatically creates routes based on your project folder structure inside the `app/` directory.
+
+```
+app/
+ ├─ page.js         →  /
+ ├─ about/
+ │   └─ page.js     →  /about
+ └─ contact/
+     └─ page.js     →  /contact
+```
+
+No need for React Router — the folder structure **is** the router.
+
+---
+
+## 2. 📄 `page.js`
+
+Every route must contain a `page.js` file.
+
+**Example:**
+
+```js
+export default function Page() {
+  return <h1>About Page</h1>;
+}
+```
+
+---
+
+## 3. ⚙️ Layouts (`layout.js`)
+
+Use `layout.js` for shared UI like navbar, footer, etc.
+
+```
+app/
+ ├─ layout.js  → wraps all pages
+ └─ dashboard/
+      └─ layout.js  → wraps dashboard pages
+```
+
+**Example:**
+
+```js
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <Navbar />
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+---
+
+## 4. 🔢 Dynamic Routes
+
+Create dynamic routes using brackets `[ ]`.
+
+```
+app/
+ └─ blog/
+      └─ [id]/
+           └─ page.js → /blog/1 , /blog/abc
+```
+
+**Example:**
+
+```js
+export default function Page({ params }) {
+  return <h1>Blog ID: {params.id}</h1>;
+}
+```
+
+---
+
+## 5. 🔁 Catch-All Routes
+
+Use `[...slug]` to match any number of segments.
+
+```
+app/docs/[...slug]/page.js → /docs/a/b/c
+```
+
+---
+
+## 6. 🎯 Route Groups (`(group)`)
+
+Route groups help you organize folders **without affecting the URL**.
+
+```
+app/
+ ├─ (dashboard)/
+ │    └─ settings/page.js → /settings
+ └─ (marketing)/
+      └─ landing/page.js  → /landing
+```
+
+Folders inside parentheses **do not** appear in the URL.
+
+---
+
+## 7. 🔀 Parallel Routes (`@slot`)
+
+Used for dashboards or advanced layouts.
+
+```
+app/
+ └─ dashboard/
+      ├─ @team/page.js
+      └─ @analytics/page.js
+```
+
+---
+
+## 8. ↩️ Redirects & Rewrites
+
+Configure in `next.config.js`.
+
+**Redirect example:**
+
+```js
+async redirects() {
+  return [
+    { source: '/old', destination: '/new', permanent: true },
+  ];
+}
+```
+
+---
+
+## 9. 📦 API Routes
+
+In the App Router, API routes are inside:
+
+```
+app/api/route.js
+```
+
+**Example:**
+
+```js
+export async function GET() {
+  return Response.json({ message: "Hello API" });
+}
+```
+
+---
+
+## 10. 📚 Navigation (`next/link`, `useRouter`)
+
+### Link Navigation
+
+```jsx
+import Link from "next/link";
+
+<Link href="/about">Go to About</Link>
+```
+
+### Programmatic Navigation
+
+```jsx
+'use client'
+import { useRouter } from 'next/navigation';
+
+const router = useRouter();
+router.push('/dashboard');
+```
+
+---
+
+## 11. 📌 Middleware Routing
+
+Middleware runs **before** a request.
+
+**Example:**
+
+```
+middleware.js
+```
+
+```js
+import { NextResponse } from "next/server";
+
+export function middleware(req) {
+  if (!req.cookies.get("token")) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+}
+```
+
+---
+
+## 12. 🚀 Summary
+
+* Routing = file‑based, built from your folder structure.
+* `page.js` → actual page
+* `layout.js` → shared UI
+* `[id]` → dynamic route
+* `[...slug]` → catch‑all
+* `(group)` → organize folders without changing URL
+* `app/api/route.js` → API endpoints
+* `next/link` and `useRouter` → navigation
+* `middleware.js` → request filtering
+
+---
+
+
+
