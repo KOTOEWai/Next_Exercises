@@ -1,0 +1,99 @@
+/* Base styles for the container and header */
+.container {
+    max-width: 1200px; /* Max width for large screens */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+}
+
+/* Loading and Error Messages */
+.loading-message, .error-message {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* ------------------------------------------------ */
+/* THE KEY RESPONSIVE GRID STYLES */
+/* ------------------------------------------------ */
+
+.user-grid {
+    /* Use CSS Grid for the layout */
+    display: grid;
+    /* Default: 1 column for small screens/mobile */
+    grid-template-columns: 1fr; 
+    gap: 20px; /* Space between cards */
+}
+
+/* Medium screens (Tablets, ~600px and up) */
+@media (min-width: 600px) {
+    .user-grid {
+        /* On medium screens, show 2 columns */
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+/* Large screens (Desktops, ~992px and up) */
+@media (min-width: 992px) {
+    .user-grid {
+        /* On large screens, show 3 columns */
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+/* ------------------------------------------------ */
+/* Card Styling */
+/* ------------------------------------------------ */
+
+.user-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+    display: flex; /* Makes content inside the card flexible */
+    flex-direction: column;
+}
+
+.user-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.user-name {
+    color: #0070f3;
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.user-detail, .address-detail, .company-name {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.company-name {
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
+
+.user-detail a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+.separator {
+    height: 1px;
+    background-color: #eee;
+    margin: 15px 0;
+}
