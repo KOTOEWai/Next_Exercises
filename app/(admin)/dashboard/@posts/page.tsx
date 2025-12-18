@@ -1,3 +1,6 @@
+import { Metadata } from "next"
+
+
 export default async function PostsPage() {
   await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate async data fetching
   return (

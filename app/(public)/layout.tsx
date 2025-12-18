@@ -2,12 +2,12 @@ import { Suspense } from 'react'
 import Footer from '../components/footer'
 import Header from '../components/header'
 import '../globals.css'
-import { Inter } from 'next/font/google'
+
 import Loading from './loading'
 import { TodoProvider } from '../components/TodoContext'
 
 
-const inter = Inter({ subsets: ['latin'] })
+
 
 export const metadata = {
   title: {
@@ -15,13 +15,12 @@ export const metadata = {
     template: '%s | MyApp',
   },
   description: 'A modern web application built with Next.js and Tailwind CSS',
-  
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.className}>
-    
+    <html lang="en"  >
+     
       <body className="text-gray-900">
         <TodoProvider>
           <div className="min-h-screen flex flex-col">

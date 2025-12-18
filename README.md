@@ -735,7 +735,7 @@ app/
       ├─ @team/page.js
       └─ @analytics/page.js
 ```
-
+## Parallel Routes တွေကို သုံးရင် Error ကင်းဖို့အတွက် သက်ဆိုင်ရာ @slot folder တိုင်းမှာ default.js တစ်ခုစီ ထည့်ထားပေးတာ အကောင်းဆုံး ဖြစ်ပါတယ်။
 ---
 
 ## 8. ↩️ Redirects & Rewrites

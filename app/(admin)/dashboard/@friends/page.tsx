@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Metadata } from "next"
+
 
 export default async function FriendsPage() {
   await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate async data fetching

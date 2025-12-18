@@ -1,0 +1,161 @@
+🗺️ Next.js တွင် Linking နှင့် Navigating 
+
+Next.js Application တစ်ခုအတွင်းမှာ Page များအကြား ချိတ်ဆက်ခြင်းနှင့် သွားလာခြင်း (Navigation) ဟာ အဓိက လုပ်ဆောင်ချက်တစ်ခု ဖြစ်ပါတယ်။
+Next.js ဟာ ဤလုပ်ငန်းစဉ်ကို မြန်ဆန်ပြီး ထိရောက်စေဖို့အတွက် Built-in Tool တွေနဲ့ နည်းလမ်းနှစ်မျိုးကို အဓိက ပံ့ပိုးပေးထားပါတယ်။
+
+
+၁။ 🔗 next/link Component ဖြင့် ချိတ်ဆက်ခြင်း (Internal Links)Application ရဲ့ Internal Page များ (တစ်နည်းအားဖြင့်၊ 
+သင့် Project ထဲမှာ ရှိတဲ့ Page များ) အချင်းချင်း ချိတ်ဆက်ဖို့အတွက် next/link Component ကို အသုံးပြုရပါမယ်။
+🔸လုပ်ဆောင်ပုံClient-Side Navigation:
+
+ ပုံမှန် HTML <a> tag လို Page တစ်ခုလုံး Reload မလုပ်ဘဲ၊ JavaScript ကို အသုံးပြုပြီး လျင်မြန်စွာ Page ကူးပြောင်းခြင်း (Client-side Transition) ကို လုပ်ဆောင်ပေးပါတယ်။
+
+Pre-fetching: next/link Component ဟာ Link ချိတ်ထားတဲ့ Page အတွက် လိုအပ်တဲ့ JavaScript Code တွေကို သုံးစွဲသူ Link ကို မနှိပ်ခင်မှာပင် ကြိုတင်ယူထား (Pre-fetch) တဲ့အတွက်၊ ကူးပြောင်းချိန်ဟာ ချက်ချင်းနီးပါး မြန်ဆန်သွားစေပါတယ်။
+
+💡 နမူနာ CodeJavaScriptimport Link from 'next/link';
+
+export default function NavigationBar() {
+  return (
+    <nav>
+      {/* 1. Static Route ကို ချိတ်ဆက်ခြင်း */}
+      <Link href="/">Home</Link>
+      
+      {/* 2. Dynamic Route ကို ချိတ်ဆက်ခြင်း */}
+      <Link href="/posts/hello-world">
+        Hello World Post
+      </Link>
+      
+      {/* 3. Query Parameter ထည့်သွင်း ချိတ်ဆက်ခြင်း */}
+      <Link href={{ pathname: '/products', query: { category: 'electronics' } }}>
+        Electronics Products
+      </Link>
+    </nav>
+  );
+}
+မှတ်ချက်: Next.js 13/14 (App Router) မှာ next/link Component အတွင်းမှာ <a> tag ကို ထပ်ထည့်စရာ မလိုတော့ပါဘူး။
+ Link Component ကိုယ်တိုင်က Render လုပ်တဲ့အခါ <a> tag ကို ထည့်သွင်းပေးပါလိမ့်မယ်။
+ 
+ 
+ ၂။ 🌐 Standard <a> Tag ဖြင့် ချိတ်ဆက်ခြင်း (External Links)သင့် Application ရဲ့ Project အပြင်ဘက်က Website များ (ဥပမာ- Google, Facebook) ကို ချိတ်ဆက်ဖို့အတွက် ရိုးရှင်းတဲ့ HTML <a> tag ကိုသာ အသုံးပြုရပါမယ်။
+ 
+ 💡 နမူနာ CodeJavaScript
+ 
+ export default function ExternalLinks() {
+  return (
+    <div>
+      {/* ပြင်ပ Website ကို ချိတ်ဆက်သောကြောင့် next/link မလိုအပ်ပါ */}
+      <a href="https://www.google.com" target="_blank" rel="noopener noreferrer">
+        Go to Google
+      </a>
+      {/* target="_blank" နဲ့ rel="noopener noreferrer" ကို သုံးသင့်ပါတယ် */}
+    </div>
+  );
+}
+
+၃။ 💻 Programmatic Navigation (ကုဒ်ဖြင့် သွားလာခြင်း)တစ်ခါတစ်ရံမှာ Button နှိပ်ပြီးနောက်၊
+ Form Submit လုပ်ပြီးနောက် ဒါမှမဟုတ် API Call လုပ်ပြီးနောက်လို Event (အဖြစ်အပျက်) တစ်ခု ဖြစ်ပေါ်တဲ့အခါမှာ
+Link ကို နှိပ်စရာမလိုဘဲ ကုဒ်နဲ့ စာမျက်နှာ ကူးပြောင်းဖို့ လိုအပ်ပါတယ်။ ၎င်းကို useRouter Hook ကို အသုံးပြုပြီး လုပ်ဆောင်နိုင်ပါတယ်။
+
+App Router ကို အသုံးပြုပါက next/navigation ကနေ useRouter ကို Import လုပ်ရပါမယ်။
+Pages Router ကို အသုံးပြုပါက next/router ကနေ useRouter ကို Import လုပ်ရပါမယ်။
+
+
+🔸 useRouter ၏ အဓိက လုပ်ဆောင်ချက်များ 
+
+ router.push(path) History Stack ထဲကို Entry အသစ်ထည့်ပြီး Page အသစ်သို့ သွားလာခြင်း။
+ 
+ router.replace(path) History Stack ထဲက လက်ရှိ Entry ကို Page အသစ်ဖြင့် အစားထိုးပြီး သွားလာခြင်း။
+
+ router.back() Browser ရဲ့ Back Button ကို နှိပ်သလို ယခင် Page သို့ ပြန်သွားခြင်း။
+ 
+ router.refresh() Server ကနေ လက်ရှိ Route အတွက် အချက်အလက်အသစ်တွေကို Fetch လုပ်ပြီး Page ကို Refresh လုပ်ခြင်း။
+ 
+ 💡 နမူနာ CodeJavaScript// App Router တွင်
+import { useRouter } from 'next/navigation'; 
+
+export default function LoginButton() {
+  const router = useRouter();
+
+  const handleLogin = () => {
+    // Login Logic ပြီးဆုံးပါက...
+    
+    // /dashboard Page သို့ Programmatic Navigation ဖြင့် သွားခြင်း
+    router.push('/dashboard'); 
+  };
+
+  return (
+    <button onClick={handleLogin}>
+      Log In and Go to Dashboard
+    </button>
+  );
+}
+Next.js မှာ next/link ဟာ Declarative (ကြေညာချက်ပုံစံ) Link များအတွက် အကောင်းဆုံးဖြစ်ပြီး၊
+
+ useRouter ဟာ Imperative (ညွှန်ကြားချက်ပုံစံ) Navigation များအတွက် အသင့်တော်ဆုံး ဖြစ်ပါတယ်။
+
+
+
+၁။ router.push(url)
+router.push ကို အသုံးပြုတဲ့အခါ၊ သွားချင်တဲ့ URL အသစ်ကို Browser ရဲ့ History Stack ရဲ့ ထိပ်ဆုံးမှာ ထပ်ထည့် ပါတယ်။
+
+🔸 History Stack တွင် ဖြစ်ပေါ်မှု
+
+အဆင့် ၁ (Start): Home -> About -> Profile (လက်ရှိ)
+
+အဆင့် ၂ (Push): router.push('/settings') ကို လုပ်ဆောင်ပါက
+
+အဆင့် ၃ (Result): Home -> About -> Profile -> Settings (လက်ရှိ)
+
+ဤအခြေအနေတွင်၊ သုံးစွဲသူသည် Back Button ကို နှိပ်ပါက Settings မှ Profile သို့ ပြန်ရောက်ပါလိမ့်မယ်။
+
+
+
+import { useRouter } from 'next/navigation';
+
+function GoToPostButton() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    // ပုံမှန်အတိုင်း အသုံးပြုသူ လမ်းကြောင်းပြောင်းခြင်း
+    router.push('/posts/123'); 
+  };
+
+  return <button onClick={handleClick}>View Post</button>;
+}
+
+
+
+
+၂။ router.replace(url)
+router.replace ကို အသုံးပြုတဲ့အခါ၊ သွားချင်တဲ့ URL အသစ်ဟာ History Stack ထဲက လက်ရှိ URL ကို အစားထိုး လိုက်ပါတယ်။
+
+🔸 History Stack တွင် ဖြစ်ပေါ်မှု
+အဆင့် ၁ (Start): Home -> Login (လက်ရှိ)
+
+အဆင့် ၂ (Replace): Login အောင်မြင်ပြီးနောက် router.replace('/dashboard') ကို လုပ်ဆောင်ပါက
+
+အဆင့် ၃ (Result): Home -> Dashboard (လက်ရှိ)
+
+ဤအခြေအနေတွင်၊ သုံးစွဲသူသည် Dashboard ကနေ Back Button ကို နှိပ်ပါက Login Page သို့ ပြန်မရောက်တော့ဘဲ Home Page သို့ တိုက်ရိုက် ရောက်ရှိသွားပါလိမ့်မယ်။
+
+
+
+import { useRouter } from 'next/navigation';
+
+function LoginForm() {
+  const router = useRouter();
+
+  const handleLoginSuccess = () => {
+    // 1. Login Page ကို History ထဲမှာ မကျန်စေချင်တဲ့အခါ
+    router.replace('/dashboard'); 
+  };
+
+  // ... (Form input / API Call Logic)
+
+  return (
+    <form onSubmit={handleLoginSuccess}>
+        {/* ... */}
+        <button type="submit">Login</button>
+    </form>
+  );
+}

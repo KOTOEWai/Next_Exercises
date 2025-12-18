@@ -1,0 +1,309 @@
+Next.js 16 ရှိ Middleware (ယခုအခါ Proxy) ရှင်းလင်းချက်
+Next.js 16 မှာ "Middleware" လို့ခေါ်တဲ့ စနစ်ဟာ "Proxy" ဆိုတဲ့ နာမည်အသစ်နဲ့ အစားထိုးလဲလှယ်ပြီး ပြောင်းလဲသွားပါပြီ။ ဒါပေမယ့် သူတို့ရဲ့ အဓိက လုပ်ဆောင်ချက်ကတော့ အတူတူပါပဲ။
+
+🧱 Middleware ဆိုတာ ဘာလဲ (ယခု Proxy)
+Middleware (အလယ်အလတ်ဆောင်ရွက်သူ) ဆိုတာ သုံးစွဲသူတစ်ဦးဆီကနေ Request (တောင်းဆိုချက်) တစ်ခု သင့် Next.js Application ထဲကို မရောက်ခင် အစောဆုံး အဆင့်မှာ ကြားဖြတ်ပြီး Code တွေ run ခွင့်ပေးတဲ့ Layer (အလွှာ) တစ်ခု ဖြစ်ပါတယ်။
+
+၎င်းဟာ Server-side (ဆာဗာဘက်) မှာ အလုပ်လုပ်ပါတယ်။
+
+သင့်ရဲ့ Route (လမ်းကြောင်း) တွေဆီ မရောက်ခင် အရင်ဆုံး အလုပ်လုပ်တာဖြစ်လို့၊ Request ကို စစ်ဆေးပြီး လိုအပ်ရင် ပြုပြင်ပြောင်းလဲမှုတွေ လုပ်နိုင်ပါတယ်။
+
+⚙️ ဘာအတွက် အသုံးပြုသလဲ
+Proxy (ယခင် Middleware) ကို အောက်ပါ ကိစ္စရပ်တွေအတွက် အများဆုံး အသုံးပြုလေ့ရှိပါတယ်-
+
+
+
+Authentication (စစ်မှန်ကြောင်း အတည်ပြုခြင်း) / Authorization (အခွင့်အရေး စစ်ဆေးခြင်း):
+
+အသုံးပြုသူ Login ဝင်ထားခြင်း ရှိမရှိ စစ်ဆေးပြီး၊ ဝင်ထားခြင်း မရှိရင် သီးခြားစာမျက်နှာ (ဥပမာ- Login စာမျက်နှာ) သို့ Redirect (လမ်းကြောင်းပြောင်း) ပေးခြင်း။
+
+
+==================================================================================================================================
+
+Rewriting (ပြန်လည်ရေးသားခြင်း):
+
+ပေါ်နေတဲ့ URL ကို မပြောင်းလဲဘဲ၊ Request ကို တခြား URL တစ်ခုဆီ ပို့ဆောင်ပေးခြင်း။
+
+==================================================================================================================================
+Redirection (လမ်းကြောင်းပြောင်းခြင်း):
+
+သုံးစွဲသူကို အခြား URL အသစ်တစ်ခုဆီ တိုက်ရိုက်ပို့ဆောင်ပေးခြင်း။
+==================================================================================================================================
+
+Header များ ပြုပြင်ခြင်း:
+
+ဝင်လာတဲ့ Request (သို့) ထွက်သွားမယ့် Response (တုံ့ပြန်မှု) မှာပါတဲ့ Header တွေကို ထည့်သွင်း၊ ပြောင်းလဲ သို့မဟုတ် ဖယ်ရှားခြင်း။
+
+==================================================================================================================================
+
+Geo-location (ပထဝီဝင်တည်နေရာ) အခြေခံ လမ်းကြောင်းပြောင်းခြင်း:
+
+သုံးစွဲသူရဲ့ တည်နေရာကို စစ်ဆေးပြီး သက်ဆိုင်ရာ ဒေသအလိုက် စာမျက်နှာကို ပြောင်းလဲပြသခြင်း။
+
+
+==================================================================================================================================
+🔄 Next.js 16 မှာ ပြောင်းလဲသွားတာများ
+Next.js 16 မှာ "middleware" ဟာ "proxy" လို့ ပြောင်းလဲပြီး ၎င်းရဲ့ လုပ်ဆောင်ရမယ့် နေရာ (network boundary) ကို ပိုမို ရှင်းလင်းသွားစေပါတယ်။
+
+ဖိုင်နာမည် အပြောင်းအလဲ:
+
+အရင်က middleware.js သို့မဟုတ် middleware.ts ကို အသုံးပြုခဲ့ရာမှ၊
+
+ယခုအခါ proxy.js သို့မဟုတ် proxy.ts ကို အသုံးပြုရမှာ ဖြစ်ပါတယ်။
+
+ရည်ရွယ်ချက် ရှင်းလင်းလာခြင်း:
+
+နာမည်အသစ် "Proxy" ဟာ ၎င်းရဲ့ အဓိကတာဝန်ဖြစ်တဲ့ Request တွေကို ကြားဖြတ်ခြင်းနဲ့ Routing (လမ်းကြောင်းချိတ်ဆက်မှု) ကို ပိုမိုတိကျစွာ ဖော်ပြပါတယ်။
+
+
+
+၁. Authentication / Authorization (လမ်းကြောင်းပြောင်းခြင်း)
+
+သုံးစွဲသူ Login ဝင်ထားခြင်း ရှိမရှိ Cookie ကို စစ်ဆေးပြီး မဝင်ထားရင် Login စာမျက်နှာဆီ လမ်းကြောင်းပြောင်းပေးခြင်း။
+
+
+// proxy.ts (Next.js 16)
+import { NextRequest, NextResponse } from 'next/server';
+
+// ကာကွယ်ထားတဲ့ လမ်းကြောင်းများ
+const protectedPaths = ['/dashboard', '/profile', '/settings'];
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // ၁။ protectedPaths များထဲမှာ ပါဝင်နေသလား စစ်ဆေးခြင်း
+  if (protectedPaths.includes(pathname)) {
+    // ၂။ Login Cookie ရှိမရှိ စစ်ဆေးခြင်း
+    const isAuthenticated = request.cookies.get('user-token');
+
+    // Token မရှိဘူးဆိုရင် Login စာမျက်နှာဆီ Redirect လုပ်မယ်။
+    if (!isAuthenticated) {
+      const url = new URL('/login', request.url); // /login ကို လမ်းကြောင်းပြောင်းရန်
+      // Redirect လုပ်ဖို့အတွက် NextResponse.redirect() ကို သုံးပါ။
+      return NextResponse.redirect(url);
+    }
+
+    // Token ရှိရင် Request ကို ပုံမှန်အတိုင်း ဆက်သွားခွင့်ပြုမယ်။
+    return NextResponse.next();
+  }
+
+  // အခြား လမ်းကြောင်းများအတွက် ပုံမှန်အတိုင်း ဆက်လက် လုပ်ဆောင်စေခြင်း
+  return NextResponse.next();
+}
+
+
+
+=================================================================================================================================
+
+
+၂. Rewriting (ပြန်လည်ရေးသားခြင်း)
+ပေါ်နေတဲ့ URL ကို မပြောင်းလဲဘဲ၊ Request ကို တခြား URL တစ်ခုဆီ ပို့ဆောင်ပေးခြင်း။ ဥပမာ- /old-page ကို /new-page ရဲ့ content ပြန်ပြပေးခြင်း။
+
+
+
+
+
+import { NextRequest, NextResponse } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // /old-page ကို ဝင်ရောက်လာပါက၊ /new-page ရဲ့ Content ကို ပြန်ပေးမယ်။
+  if (pathname === '/old-page') {
+    // Rewriting လုပ်ဖို့အတွက် NextResponse.rewrite() ကို သုံးပါ။
+    const url = new URL('/new-page', request.url);
+    return NextResponse.rewrite(url);
+  }
+
+  // /api/users ကို ခေါ်တဲ့အခါ external API တစ်ခုဆီ ပြောင်းပေးခြင်း
+  if (pathname.startsWith('/api/users')) {
+    // ဒိုမိန်းအပြည့်အစုံနဲ့ external API ဆီ ပြောင်းပေးနိုင်ပါတယ်။
+    const newUrl = `https://api.external-service.com${pathname}`;
+    return NextResponse.rewrite(newUrl);
+  }
+
+  return NextResponse.next();
+}
+
+
+
+=================================================================================================================================
+
+၃. Redirection (လမ်းကြောင်းပြောင်းခြင်း)
+သုံးစွဲသူကို အခြား URL အသစ်တစ်ခုဆီ တိုက်ရိုက်ပို့ဆောင်ပေးခြင်း။ (Browser URL မှာ ပြောင်းသွားပါမယ်)
+
+
+import { NextRequest, NextResponse } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // /contact ကို ခေါ်ရင် /about-us ဆီ လုံးဝ ပြောင်းပစ်ခြင်း
+  if (pathname === '/contact') {
+    const url = new URL('/about-us', request.url);
+    // Redirection လုပ်ဖို့အတွက် NextResponse.redirect() ကို သုံးပါ။
+    return NextResponse.redirect(url, 301); // 301 သည် Permanent Redirect ကို ဆိုလိုသည်။
+  }
+
+  return NextResponse.next();
+}
+
+=-================================================================================================================================
+
+၄. Header များ ပြုပြင်ခြင်း
+ထွက်သွားမယ့် Response မှာ Custom Header တစ်ခု ထည့်သွင်းခြင်း။
+
+
+import { NextRequest, NextResponse } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  // ပုံမှန်အတိုင်း အလုပ်လုပ်ခွင့်ပေးလိုက်ပြီး Response ကို ရယူပါ။
+  const response = NextResponse.next();
+
+  // ထွက်လာမယ့် Response ထဲကို Custom Header ထည့်သွင်းခြင်း
+  response.headers.set('X-Custom-Proxy-Header', 'Processed-By-NextJS-Proxy');
+
+  // Security Header များ ထည့်သွင်းခြင်း
+  response.headers.set('X-Frame-Options', 'DENY');
+
+  // Response အသစ်ကို ပြန်ပို့ခြင်း
+  return response;
+}
+
+==================================================================================================================================
+
+၅. Geo-location အခြေခံ လမ်းကြောင်းပြောင်းခြင်း
+သုံးစွဲသူရဲ့ တည်နေရာ (Country) ကို စစ်ဆေးပြီး သက်ဆိုင်ရာ ဒေသအလိုက် စာမျက်နှာကို ပြောင်းလဲပြသခြင်း။
+
+NextRequest ကနေ geo.country ကို အသုံးပြုနိုင်ပါတယ်။
+
+
+
+import { NextRequest, NextResponse } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  const country = request.geo?.country || 'Unknown'; // နိုင်ငံကုဒ်ကို ရယူပါ။ (ဥပမာ: MM)
+  const { pathname } = request.nextUrl;
+
+  // ပင်မ စာမျက်နှာကို ဝင်ရောက်လာတဲ့အခါ
+  if (pathname === '/') {
+    // မြန်မာနိုင်ငံက လာတဲ့သူဆိုရင် /mm စာမျက်နှာဆီ လမ်းကြောင်းပြောင်း
+    if (country === 'MM') {
+      const url = new URL('/mm', request.url);
+      return NextResponse.rewrite(url);
+    }
+    // အမေရိကန်က လာတဲ့သူဆိုရင် /us စာမျက်နှာဆီ လမ်းကြောင်းပြောင်း
+    if (country === 'US') {
+      const url = new URL('/us', request.url);
+      return NextResponse.rewrite(url);
+    }
+  }
+
+  // အခြားသူများအတွက် ပုံမှန်အတိုင်း
+  return NextResponse.next();
+}
+
+
+=================================================================================================================================
+
+
+
+
+Next.js ရဲ့ Proxy (ယခင် Middleware) function တွေမှာ matcher ဆိုတာ အလွန်အရေးကြီးတဲ့ Configuration (ပြင်ဆင်သတ်မှတ်ချက်) တစ်ခု ဖြစ်ပါတယ်။
+
+matcher ရဲ့ အဓိက ရည်ရွယ်ချက်ကတော့ သင်ရေးသားထားတဲ့ proxy function (သို့မဟုတ် ယခင် middleware function) ကို
+ ဘယ် Route (လမ်းကြောင်း) တွေမှာ အလုပ်လုပ်စေရမယ် ဆိုတာကို Next.js ကို ပြောပြဖို့ပဲ ဖြစ်ပါတယ်။
+
+
+ဘာကြောင့် matcher လိုအပ်တာလဲ
+
+Proxy (Middleware) function ဟာ သင့်ရဲ့ Application ကို ဝင်လာတဲ့ Request တိုင်း မှာ အလုပ်လုပ်ဖို့ ကြိုးစားပါတယ်။ 
+
+သို့သော်-
+
+စွမ်းဆောင်ရည် (Performance): Request တိုင်းမှာ Proxy ကို Run ခြင်းဟာ မလိုအပ်ဘဲ စွမ်းဆောင်ရည်ကို နှေးကွေးစေပါတယ်။
+
+ထိန်းချုပ်နိုင်မှု (Control): သင်ဟာ Authentication ကို /login လို လမ်းကြောင်းတွေမှာ Run စေချင်မှာ မဟုတ်ပါဘူး။
+
+ထို့ကြောင့်၊ matcher ကို အသုံးပြုပြီး၊ Proxy function ကို လိုအပ်တဲ့ လမ်းကြောင်းအချို့ မှာသာ တိတိကျကျ အလုပ်လုပ်စေဖို့ ကန့်သတ်နိုင်ပါတယ်။
+
+
+matcher ကို ဘယ်လို အသုံးပြုရမလဲ
+matcher ကို သင့်ရဲ့ proxy.ts (သို့မဟုတ် proxy.js) ဖိုင်အတွင်းမှာ config object အောက်မှာ Array (အစီအစဉ်) ပုံစံဖြင့် သတ်မှတ်ရပါမယ်။
+
+import { NextRequest, NextResponse } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  // ဤ function ကို /dashboard နဲ့ /profile လမ်းကြောင်းများတွင်သာ အလုပ်လုပ်စေလိုပါတယ်။
+  // Next.js ဟာ အောက်က config.matcher နဲ့ စစ်ဆေးပြီးမှ ဒီ function ကို ခေါ်ပါတယ်။
+  
+  const isAuthenticated = request.cookies.get('user-token');
+  
+  if (!isAuthenticated) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+  
+  return NextResponse.next();
+}
+
+// 🎯 config object မှာ matcher ကို သတ်မှတ်ခြင်း
+export const config = {
+  // matcher array ထဲမှာ ပါတဲ့ routes တွေမှာသာ proxy function ကို Run ပါမယ်။
+  matcher: [
+    // /dashboard နဲ့ စတဲ့ လမ်းကြောင်းအားလုံး (ဥပမာ: /dashboard/settings)
+    '/dashboard/:path*', 
+    
+    // /profile လမ်းကြောင်း
+    '/profile', 
+    
+    // /settings လမ်းကြောင်း
+    '/settings', 
+  ],
+};
+
+
+
+
+
+Matcher Pattern အမျိုးအစားများ
+matcher မှာ သတ်မှတ်နိုင်တဲ့ Pattern ပုံစံများစွာ ရှိပါတယ်။ ၎င်းတို့ဟာ Path-to-RegExp library ကို အခြေခံထားပါတယ်။
+
+
+Pattern,                     ရှင်းလင်းချက်,                                         ဥပမာ လမ်းကြောင်း
+/path,                      တိကျတဲ့ လမ်းကြောင်း။,                                   /about
+/path/:id,                  Dynamic Segment တစ်ခု။,                               /users/123
+/path/:path*,               လမ်းကြောင်းတစ်ခုအောက်ရှိ လမ်းကြောင်းခွဲ အားလုံး။,            /posts/1/comment (ရ)
+/path/:path+,               /path ကို ချန်လှပ်၍ လမ်းကြောင်းခွဲအားလုံး။,                  /posts/1/comment (ရ)
+/(group)/path,              အုပ်စုဖွဲ့ပြီး ခွဲခြားနိုင်သော်လည်း URL တွင် မပါဝင်ပါ။,             /(marketing)/about
+
+
+
+
+ဖယ်ထုတ်ချင်တဲ့ လမ်းကြောင်းများ (Excluding Paths)
+အချို့သော ဖိုင်များ (ဥပမာ- Static Files၊ Next.js ရဲ့ အတွင်းပိုင်း လမ်းကြောင်းများ) ကို Proxy ကနေ အလုပ်မလုပ်စေချင်ရင် Array ထဲမှာ ဖယ်ထုတ်နိုင်ပါတယ်။
+
+Next.js ဟာ အချို့သော လမ်းကြောင်းများကို Default အားဖြင့် ဖယ်ထုတ် ထားပေးပါတယ်-
+
+/_next/static (Static assets များ)
+
+/_next/image (Next.js Image Optimization)
+
+/api/auth (NextAuth.js routes)
+
+/favicon.ico (Favicon)
+
+/.git (Git files)
+
+
+
+သင့်ဘက်က ထပ်မံ ဖယ်ထုတ်ချင်ရင် Negative Lookaheads ကို RegExp ပုံစံနဲ့ အသုံးပြုနိုင်ပါတယ်။
+
+
+export const config = {
+  // /dashboard ကို သတ်မှတ်ထားပေမယ့်၊ /dashboard/public ကို ချန်လှပ်ထားချင်ရင်
+  matcher: [
+    '/dashboard/:path*',
+    // ဤပုံစံသည်: /dashboard လမ်းကြောင်းမှာ ပါဝင်ပြီး၊ /dashboard/public ကို ချန်လှပ်ထားခြင်း
+    '/((?!dashboard/public).*)', 
+  ],
+};

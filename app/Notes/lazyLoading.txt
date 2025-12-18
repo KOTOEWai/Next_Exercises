@@ -1,0 +1,95 @@
+Next.js ရှိ Lazy Loading
+Lazy Loading ဆိုတာ Web Performance ကို မြှင့်တင်ဖို့အတွက် အသုံးပြုတဲ့ နည်းလမ်းတစ်ခု ဖြစ်ပါတယ်။
+၎င်းရဲ့ အဓိက သဘောတရားကတော့ လက်ရှိ မလိုအပ်သေးတဲ့ Resources တွေ (ကုဒ်၊ ပုံ၊ Component) ကို ချက်ချင်း မ Load ဘဲ၊
+တကယ်လိုအပ်တဲ့အချိန် (ဥပမာ- သုံးစွဲသူက ထိုနေရာသို့ Scroll လုပ်လာတဲ့အခါ) မှသာ Load လုပ်ခြင်း ဖြစ်ပါတယ်။
+
+Next.js ဟာ Lazy Loading ကို နည်းလမ်းများစွာနဲ့ အလိုအလျောက်ရော၊ ကိုယ်တိုင်ပါ ထောက်ပံ့ပေးထားပါတယ်။
+
+
+၁။ Code (Component) Lazy Loading
+
+Next.js မှာ အကြီးဆုံး အားသာချက်ကတော့ Component တွေကို လိုအပ်မှသာ Load လုပ်ခြင်း (Component-Level Code Splitting) ပဲ ဖြစ်ပါတယ်။
+၎င်းကို next/dynamic Utility ကို အသုံးပြုပြီး လုပ်ဆောင်ပါတယ်။
+
+
+// CommentSection.js: လေးလံတဲ့ Code များပါဝင်နိုင်
+export default function CommentSection() {
+  return (
+    <div className="comment-box">
+      {/* ... Comment တွေနဲ့ တခြား Logic များ ... */}
+    </div>
+  );
+}
+
+
+// pages/post/[id].js (သို့မဟုတ် App Router တွင်)
+
+import dynamic from 'next/dynamic';
+
+// ဤ Component ကို Dynamic Import လုပ်ပြီး သီးခြား Chunk အဖြစ် ခွဲထုတ်လိုက်ပါတယ်။
+
+const DynamicCommentSection = dynamic(() => import('../components/CommentSection'), {
+  // Loading မပြီးခင်မှာ ပြသဖို့ Loading Component (optional)
+  loading: () => <p>Loading comments...</p>,
+  // SSR (Server Side Rendering) ကို ပိတ်ထားရင် Client ဘက်မှာသာ Load ပါမယ်။
+  ssr: false, 
+});
+
+export default function PostDetail() {
+  return (
+    <div>
+      <h1>Post Title</h1>
+      <p>Post Content...</p>
+      
+      {/* စာမျက်နှာအောက်ခြေသို့ Scroll လုပ်တဲ့အခါမှ DynamicCommentSection ကို Load ပါမယ်။ */}
+      <DynamicCommentSection />
+    </div>
+  );
+}
+
+
+၂။ Image Lazy Loading
+
+Next.js ဟာ Images တွေကိုလည်း အလိုအလျောက် Lazy Load လုပ်ပေးပါတယ်။
+
+Next.js Image Component:
+Next.js ရဲ့ next/image Component ကို အသုံးပြုရင်၊
+
+loading="lazy" attribute ကို ထပ်ထည့်ပေးစရာ မလိုဘဲ၊ Viewport (မြင်ကွင်းဧရိယာ) ထဲမှာ မရှိသေးတဲ့ ပုံတွေကို အလိုအလျောက် Lazy Load လုပ်ပါတယ်။
+
+
+
+import Image from 'next/image';
+// ...
+<div style={{ height: '1000px' }}>Scroll down to see the lazy loaded image</div>
+
+<Image
+  src="/nextjs-logo.png"
+  alt="Next.js Logo"
+  width={500}
+  height={300}
+  // loading="lazy" ကို သတ်မှတ်စရာ မလိုပါ။ Default အားဖြင့် Lazy Load လုပ်ပြီးသား ဖြစ်ပါတယ်။
+/>
+
+
+၃။ Route Lazy Loading (Pre-fetching)
+
+Next.js ဟာ Route (လမ်းကြောင်း) အလိုက် Code Splitting လုပ်တဲ့အပြင်၊
+Pre-fetching နည်းလမ်းကို အသုံးပြုပြီး နောက်လာမယ့် Page တွေကို Lazy Load လုပ်ထားပေးပါတယ်။
+
+next/link ၏ လုပ်ဆောင်ပုံ:
+
+သုံးစွဲသူဟာ Link တစ်ခုနားကို Mouse Hover လုပ်လိုက်တဲ့အခါ သို့မဟုတ် Viewport ထဲမှာ Link ကို မြင်လိုက်ရတဲ့အခါ၊ 
+Next.js ဟာ ထို Link ရဲ့ Page အတွက် လိုအပ်တဲ့ Code Chunk ကို နောက်ကွယ်ကနေ အလိုအလျောက် Download လုပ်ပြီး သိမ်းဆည်းထားပါတယ်။
+
+ရလဒ်: သုံးစွဲသူ Link ကို နှိပ်လိုက်တဲ့အခါ၊ Code က အသင့်ရှိနေတဲ့အတွက် ချက်ချင်းဆိုသလို စာမျက်နှာ အပြောင်းအလဲ ဖြစ်သွားပါတယ်။
+ ၎င်းကို Smart Lazy Loading လို့ ခေါ်ဆိုနိုင်ပါတယ်။
+
+
+Next.js မှာ Lazy Loading ဟာ Application ရဲ့ စွမ်းဆောင်ရည်ကို တိုးတက်စေဖို့အတွက် အဓိကသော့ချက် ဖြစ်ပါတယ်။
+
+Code/Component: next/dynamic ကို အသုံးပြုပါ။
+
+Image: next/image Component ကို အသုံးပြုပါ။
+
+Routes: next/link ကို အသုံးပြုပြီး Smart Pre-fetching ကို ရယူပါ။
