@@ -1,0 +1,104 @@
+Next.js ၏ next/font/google ကို အသုံးပြုခြင်းဖြင့် Google Fonts များကို အကောင်းဆုံး စွမ်းဆောင်ရည် (Performance) ရရှိအောင်
+အလိုအလျောက် Optimize လုပ်နိုင်ပါသည်။
+
+next/font/google ၏ အဓိက ထူးခြားချက်များ
+
+Automatic Self-hosting: Build ပြုလုပ်ချိန်တွင် Next.js သည် Font ဖိုင်များကို Google ထံမှ Download ရယူပြီး
+သင့် Project ထဲ၌ သိမ်းဆည်းပေးသောကြောင့် Browser မှ Google ဆီသို့ Request ပို့ရန် မလိုတော့ပါ။
+
+Privacy: Browser မှ Google ဆီသို့ Request မပို့တော့သဖြင့် User ၏ IP address နှင့် Cookies များကို Google မှ ရယူခြင်း မပြုနိုင်တော့ပါ။
+
+Zero Layout Shift: Font မပေါ်ခင်နှင့် ပေါ်လာပြီးနောက် စာသားများ ခုန်ထွက်သွားခြင်း (Cumulative Layout Shift) မဖြစ်အောင် CSS size-adjust ကို
+အသုံးပြု၍ အလိုအလျောက် ချိန်ညှိပေးပါသည်။
+
+
+
+အသုံးပြုပုံ အဆင့်ဆင့်
+၁။ Font ကို Import လုပ်ပြီး Configure လုပ်ခြင်း
+
+app/layout.tsx (သို့မဟုတ် Font သုံးလိုသော Page) ထဲတွင် Google Font ကို ခေါ်ယူပါ။
+
+import { Bokor } from 'next/font/google';
+const bokorFont = Bokor({
+    subsets:['latin'],
+    variable:'--font-bokor',
+    weight:'400'
+})
+
+၂။ Font ကို အသုံးပြုခြင်း
+app/layout.tsx (သို့မဟုတ် Font သုံးလိုသော Page) ထဲတွင် Font ကို အသုံးပြုပါ။
+<h1 className={bokorFont.className}>Bokor Font</h1>
+<p className={bokorFont.className}>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente ea velit eius quia, sint quas ad. Est nisi dolores, voluptas incidunt provident, deserunt assumenda, tenetur quas deleniti dolorem sequi nostrum?
+</p>
+
+
+၃။ Global CSS သို့ Font Variable ကို ထည့်သွင်းခြင်း (Optional)
+app/globals.css (သို့မဟုတ် သင့် Project ၏ Global CSS ဖိုင်) ထဲတွင် Font Variable ကို ထည့်သွင်းနိုင်ပါသည်။
+:root {
+    --font-bokor: 'Bokor', sans-serif;
+}
+body {
+    font-family: var(--font-bokor);
+}
+
+
+
+၄။ Font Weight များစွာ အသုံးပြုလိုပါက
+Font Weight များစွာ အသုံးပြုလိုပါက weight property တွင် Array အဖြစ် သတ်မှတ်နိုင်ပါသည်။
+const bokorFont = Bokor({
+    subsets:['latin'],
+    variable:'--font-bokor',
+    weight:['400', '700']
+})
+၅။ Font Style များစွာ အသုံးပြုလိုပါက
+Font Style များစွာ အသုံးပြုလိုပါက style property တွင် Array အဖြစ် သတ်မှတ်နိုင်ပါသည်။
+const bokorFont = Bokor({
+    subsets:['latin'],
+    variable:'--font-bokor',
+    weight:['400', '700'],
+    style:['normal', 'italic']
+})
+၆။ Font Display ကို သတ်မှတ်လိုပါက
+Font Display ကို သတ်မှတ်လိုပါက display property ကို သုံးနိုင်ပါသည်။
+const bokorFont = Bokor({
+    subsets:['latin'],
+    variable:'--font-bokor',
+    weight:'400',
+    display:'swap'
+})
+၇။ Custom Fallback Stack ကို သတ်မှတ်လိုပါက
+Custom Fallback Stack ကို သတ်မှတ်လိုပါက fallback property ကို သုံးနိုင်ပါသည်။
+const bokorFont = Bokor({
+    subsets:['latin'],
+    variable:'--font-bokor',
+    weight:'400',
+    fallback:['Arial', 'sans-serif']
+})
+၈။ Multiple Fonts ကို တပြိုင်နက် သုံးလိုပါက
+Multiple Fonts ကို တပြိုင်နက် သုံးလိုပါက အောက်ပါအတိုင်း သတ်မှတ်နိုင်ပါသည်။
+import { Bokor, Roboto } from 'next/font/google';
+const bokorFont = Bokor({
+    subsets:['latin'],
+    variable:'--font-bokor',
+    weight:'400'
+})
+const robotoFont = Roboto({
+    subsets:['latin'],
+    variable:'--font-roboto',
+    weight:'400'
+})
+<h1 className={bokorFont.className}>Bokor Font</h1>
+<h1 className={robotoFont.className}>Roboto Font</h1>
+၉။ Local Fonts ကို အသုံးပြုလိုပါက
+Local Fonts ကို အသုံးပြုလိုပါက next/font/local ကို သုံးနိုင်ပါသည်
+import localFont from 'next/font/local';
+const myFont = localFont({
+    src: '../path/to/font.woff2',
+    variable: '--font-my-font',
+});
+<h1 className={myFont.className}>My Local Font</h1>
+<p className={myFont.className}>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente ea velit eius quia, sint quas ad. Est nisi dolores, voluptas incidunt provident, deserunt assumenda, tenetur quas deleniti dolorem sequi nostrum?
+</p>
+

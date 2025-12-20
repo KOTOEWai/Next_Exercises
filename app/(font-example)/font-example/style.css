@@ -1,0 +1,14 @@
+/* (font-example)/font-example/style.css */
+
+/* h1 ကို Bokor သတ်မှတ်မယ် */
+.font-example-container h1 {
+  font-family: var(--font-heading);
+  color: #216fbd;
+}
+
+/* p ကို Inter သတ်မှတ်မယ် */
+.font-example-container p {
+  font-family: var(--font-body);
+  color: #bd0f0f;
+  font-size: 1.2rem;
+}
