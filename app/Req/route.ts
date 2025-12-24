@@ -1,6 +1,7 @@
 import { NextRequest , NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { headers } from "next/headers";
+
 export async function GET(request: NextRequest , response:NextResponse ) {
      
    // console.log(request);
@@ -32,8 +33,6 @@ export async function GET(request: NextRequest , response:NextResponse ) {
     const headerLists = await headers();
     console.log(headerLists.get("host"));
 
-
-    
     return NextResponse.json({message:"ReqRes API data"});
     
 

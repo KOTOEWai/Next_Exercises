@@ -47,7 +47,7 @@ export default function Home() {
 
             {/* Login */}
             <Link
-              href="/login"
+              href="/middleLogin"
               className="block p-6 bg-yellow-50 border-2 border-yellow-200 rounded-lg hover:border-yellow-400 transition"
             >
               <h2 className="text-xl font-semibold text-yellow-900 mb-2">🔑 Login Page</h2>

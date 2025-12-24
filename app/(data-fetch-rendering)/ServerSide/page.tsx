@@ -7,11 +7,15 @@ type Book = {
 };
 import { ServersideFunction } from "@/lib/server-util";
 //import { clientSideFunction } from "@/lib/client-util"; 
-export const dynamic = "force-dynamic";
+
+
+export const dynamic = "force-dynamic"; // ensure SSR
+// export const dynamic = "force-static"; // ensure Static
 
 async function getBooks(): Promise<Book[]> {
   const res = await fetch("http://localhost:3000/api/book", {
-    cache: "no-store",   // 🔥 make it SSR (no caching)
+    cache: "no-store",   // 🔥 make it SSR (no caching) 
+    // cache: "force-cache",  // 🔥 make it Static (cache forever)
   });
 
   if (!res.ok) throw new Error("Failed to fetch");

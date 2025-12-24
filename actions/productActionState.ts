@@ -4,10 +4,12 @@ import { connectToDB } from "@/lib/db";
 import { Product } from "@/models/Product";
 
 
+
 interface ActionState {
   message: string | null;
   success: boolean;
 }
+
 
 export async function createProductAction(
   prevState: ActionState,

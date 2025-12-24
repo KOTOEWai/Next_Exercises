@@ -1,0 +1,43 @@
+Next.js မှာ Bundler ဆိုတာ သင့်ရဲ့ JavaScript၊ CSS နဲ့ Font ဖိုင်တွေအပါအဝင် ရာနဲ့ချီတဲ့ code ဖိုင်တွေကို
+Browser က နားလည်ပြီး အမြန်ဆုံး run နိုင်မယ့် ဖိုင်အနည်းငယ် (chunks) အဖြစ် စုစည်းပေးတဲ့ အင်ဂျင်ဖြစ်ပါတယ်။
+
+Next.js မှာ အဓိက အသုံးပြုတဲ့ Bundler နည်းပညာ (၂) ခုရှိပါတယ်။
+
+၁။ Webpack (The Classic Bundler)
+
+Next.js ရဲ့ အစပိုင်းကတည်းက အသုံးပြုလာတဲ့ standard bundler ဖြစ်ပါတယ်။ ၎င်းက အလွန်တည်ငြိမ်ပြီး အစွမ်းထက်ပါတယ်။
+
+Default: သင် next dev သို့မဟုတ် next build လုပ်တဲ့အခါ Next.js က နောက်ကွယ်မှာ Webpack ကို အလိုအလျောက် အသုံးပြုပါတယ်။
+
+Customization: သင့်မှာ သီးသန့်လိုအပ်ချက်ရှိရင် next.config.js ထဲမှာ Webpack configuration ကို စိတ်ကြိုက်ပြင်ဆင်နိုင်ပါတယ်။
+
+၂။ Turbopack (The New Generation)
+
+Turbopack ဆိုတာ Webpack ကို ဆက်ခံဖို့ Rust ဘာသာစကားနဲ့ ရေးသားထားတဲ့ အလွန်မြန်ဆန်တဲ့ Incremental bundler ဖြစ်ပါတယ်။
+
+Speed: Webpack ထက် အဆပေါင်းများစွာ ပိုမြန်ပါတယ်။ Code ပြင်လိုက်တာနဲ့ Browser မှာ ပြောင်းလဲသွားတဲ့နှုန်း (HMR - Hot Module Replacement) က
+သိသိသာသာ မြန်ပါတယ်။
+
+Development Mode: လက်ရှိမှာတော့ Turbopack ကို Development mode မှာပဲ အဓိက သုံးနိုင်ပါသေးတယ်။
+
+အသုံးပြုပုံ: သင်က Turbopack ရဲ့ အရှိန်ကို စမ်းချင်ရင် terminal မှာ အောက်ပါအတိုင်း run ရပါမယ်-
+
+Bash
+
+next dev --turbo
+
+
+Bundler က ဘာတွေလုပ်ပေးတာလဲ?
+
+Code Splitting: Page တစ်ခုချင်းစီအတွက် လိုအပ်တဲ့ Code ကိုပဲ ခွဲထုတ်ပေးပါတယ်။ ဥပမာ- /admin page ကိုသွားရင်
+admin နဲ့ဆိုင်တဲ့ code ကိုပဲ load လုပ်ပြီး ကျန်တာတွေကို ချန်ထားခဲ့ပါတယ်။
+
+Tree Shaking: သင် import လုပ်ထားပေမယ့် တကယ်အသုံးမပြုတဲ့ code တွေကို ဖယ်ထုတ်ပြီး ဖိုင်အရွယ်အစားကို သေးအောင် လုပ်ပေးပါတယ်။
+
+Asset Optimization: ပုံတွေ၊ Font တွေကို browser က အမြန်ဆုံးယူနိုင်အောင် ပြုပြင်ပေးပါတယ်။
+
+Minification: Code ထဲက မလိုအပ်တဲ့ space တွေ၊ comment တွေကို ဖျက်ထုတ်ပြီး ဖိုင်ကို ပေါ့ပါးအောင် လုပ်ပေးပါတယ်။
+
+💡 အနှစ်ချုပ်
+Next.js ဟာ အရင်က Webpack ကို အခြေခံခဲ့ပေမယ့် အခုအခါမှာတော့ ပိုမိုမြန်ဆန်တဲ့ Turbopack ဘက်ကို ကူးပြောင်းနေပြီဖြစ်ပါတယ်။
+ Dev လုပ်နေတုန်း ခဏခဏ စောင့်ရတာ ငြီးငွေ့လာရင် --turbo flag ကို သုံးပြီး စမ်းကြည့်ဖို့ အကြံပြုလိုပါတယ်။cls

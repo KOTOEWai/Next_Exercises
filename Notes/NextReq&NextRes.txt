@@ -42,9 +42,11 @@ url,                    လက်ရှိ URL အပြည့်အစုံ။
 
 nextUrl,              URL ကို ပိုမို ခွဲခြမ်းစိတ်ဖြာထားတဲ့ Object။ Routing လုပ်ဖို့ အရေးကြီးတယ်။,       request.nextUrl.pathname (လမ်းကြောင်း) pathname, searchParams, hostname စသဖြင့် ခွဲထားတယ်။
 
-headers,              Request Header များ။,                                                request.headers.get('accept-language')
+headers,              Request Header များ။,                                                request.headers.get('accept-language') request.headers.get('user-agent') request.headers.get('host') 
+                                                                                         request.headers.get('referer') request.headers.get('authorization') request.headers.get('content-type')
+                                                                                         request.headers.get('cookie') request.headers.get('x-custom-header') 
 
-cookies,              Request မှာ ပါလာတဲ့ Cookie များ။,                                      request.cookies.get('user-token')
+cookies,              Request မှာ ပါလာတဲ့ Cookie များ။,                                      request.cookies.get('user-token') request.cookies.get('session-id') request.cookies.get('preferences')
 
 
 geo,                  သုံးစွဲသူရဲ့ ပထဝီဝင် တည်နေရာ အချက်အလက် (Proxy မှာသာ ရနိုင်)။,             request.geo.country

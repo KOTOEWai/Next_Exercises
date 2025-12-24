@@ -1,5 +1,5 @@
 
-import './globals.css'
+import './style.css'
 
 import { Inter  } from "next/font/google";
 
@@ -14,5 +14,4 @@ export default function RootLayout({
             <body>{children}</body>
         </html>
     )   
-
 }

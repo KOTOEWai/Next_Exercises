@@ -159,3 +159,81 @@ function LoginForm() {
     </form>
   );
 }
+
+
+၃။ 🔄 Page Refreshing (စာမျက်နှာ ပြန်လည်သွင်းခြင်း)တစ်ခါတစ်ရံမှာ သင့် Application ရဲ့ လက်ရှိ Page ကို Server ကနေ အချက်အလက်အသစ်တွေကို Fetch လုပ်ပြီး ပြန်လည်သွင်းဖို့ လိုအပ်နိုင်ပါတယ်။
+ ဤအခြေအနေတွင် router.refresh() ကို အသုံးပြုနိုင်ပါတယ်။
+
+import { useRouter } from 'next/navigation';
+function MyComponent() {
+  const router = useRouter();
+  const handleRefresh = () => {
+    // လက်ရှိ Page ကို ပြန်လည်သွင်းခြင်း
+    router.refresh(); 
+  };
+  return <button onClick={handleRefresh}>Refresh Page</button>;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+၄။ 🧭 Route Parameters နှင့် Query Parameters ရယူခြင်းNext.js Application မှာ Dynamic Routes (ဥပမာ- /posts/[id]) ကို အသုံးပြုတဲ့အခါ
+ သို့မဟုတ် Query Parameters (ဥပမာ- /products?category=electronics) ကို အသုံးပြုတဲ့အခါမှာ
+ သင့် Application ရဲ့ လက်ရှိ Route ကနေ အချက်အလက်တွေကို ရယူဖို့ လိုအပ်ပါတယ်။
+
+import { useParams } from 'next/navigation';
+function PostDetails() {
+  const params = useParams();
+  const postId = params.id; // Dynamic Route Parameter ကို ရယူခြင်း
+
+  return <div>Post ID: {postId}</div>;
+}
+
+
+import { useSearchParams } from 'next/navigation';
+function ProductList() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category'); // Query Parameter ကို ရယူခြင်း
+
+  return <div>Category: {category}</div>;
+}
+
+
+import { usePathname } from 'next/navigation';
+function CurrentPath() {
+  const pathname = usePathname(); // လက်ရှိ Pathname ကို ရယူခြင်း
+
+  return <div>Current Path: {pathname}</div>;
+}
+
+
+
+import { useRouter, useParams, useSearchParams, usePathname  } from 'next/navigation';
+function MyComponent() {
+  const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Example Usage
+  const postId = params.id;
+  const category = searchParams.get('category');
+
+  return (
+    <div>
+      <div>Post ID: {postId}</div>
+      <div>Category: {category}</div>
+      <div>Current Path: {pathname}</div>
+    </div>
+  );
+}

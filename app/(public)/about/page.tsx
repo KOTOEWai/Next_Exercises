@@ -10,6 +10,7 @@ export const metadata:Metadata = {
 
 
 export default async function Aboutpage() {
+   
     const res = await fetch("http://localhost:3000/api/book", {
      cache: "no-store",
      });
