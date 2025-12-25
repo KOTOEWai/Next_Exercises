@@ -2,9 +2,12 @@
 
 import { useForm, useFieldArray , FieldErrors  } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormSchema ,FormValues } from "./FormSchema";
+import { submitForm } from "@/actions/submitForm";
+import { useState } from "react";
 // ၁။ Type ကို သေချာသတ်မှတ်ပါ (Skills array အတွက် structure ပါရပါမယ်)
+{/* 
 type FormValues = {
   email: string;
   password: string;
@@ -20,17 +23,21 @@ type FormValues = {
   socialMediaUrl: string;
 };
 
+*/}
 
 
 export default function BaseForm() {
+  const [ msg , setMsg ] = useState("");
   const { register, handleSubmit,reset, control, trigger, formState:{ isDirty,isSubmitSuccessful,submitCount, dirtyFields,touchedFields,isSubmitted,isSubmitting,errors ,isValid}, watch , getValues , setValue} = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       social: { facebook: "", twitter: "" },
       phonenumbers: ["", ""],
       skills: [{ name: "React", level: "Beginner" }], // ပထမဆုံး value ပေးထားခြင်း
-      age: 0,
+      age: 18,
       db: new Date(),
       hasSocial: false,
       socialMediaUrl: "",
@@ -49,8 +56,9 @@ export default function BaseForm() {
   // remove(index) : သတ်မှတ်ထားတဲ့ index က item ကို ဖျက်ရန်။
   // move(from, to): Item တွေကို နေရာရွှေ့ရန်။
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Submitted Data:", data);
+  const onSubmit = async (data: FormValues) => {
+   const res =  await submitForm(data);
+   if(res.success) setMsg(res.message ?? "");
   };
 
   const watchvalue = watch("email");
@@ -58,7 +66,7 @@ export default function BaseForm() {
  const showSocial = watch("hasSocial");
 
 
- const handleGetValues = (data: FormValues) => {
+ const handleGetValues = () => {
   console.log(getValues());
   console.log(getValues("phonenumbers"));
  }
@@ -74,27 +82,26 @@ export default function BaseForm() {
  const onInvalid = (errors: FieldErrors<FormValues>) => console.log(errors);
   
 // console.log("isSubmitting", isSubmitting); // Form ကို Submit လုပ်လိုက်တဲ့အချိန်ကနေ onSubmit function ပြီးဆုံးတဲ့အထိ true ဖြစ်နေပါမယ်။
- //Usage: API ခေါ်နေစဉ်မှာ "Loading..." ပြဖို့ ဒါမှမဟုတ် ခလုတ်ကို Disable လုပ်ဖို့ သုံးပါတယ်။
-
- //console.log("isSubmitted", isSubmitted); //User က Submit ခလုတ်ကို တစ်ကြိမ်နှိပ်ပြီးသွားတာနဲ့ (Validation အောင်သည်ဖြစ်စေ၊ ရှုံးသည်ဖြစ်စေ) true ဖြစ်သွားပါမယ်။
-
+//Usage: API ခေါ်နေစဉ်မှာ "Loading..." ပြဖို့ ဒါမှမဟုတ် ခလုတ်ကို Disable လုပ်ဖို့ သုံးပါတယ်။
+//console.log("isSubmitted", isSubmitted); //User က Submit ခလုတ်ကို တစ်ကြိမ်နှိပ်ပြီးသွားတာနဲ့ (Validation အောင်သည်ဖြစ်စေ၊ ရှုံးသည်ဖြစ်စေ) true ဖြစ်သွားပါမယ်။
 // console.log("isSubmitSuccessful", isSubmitSuccessful); // onSubmit function ထဲက logic တွေမှာ Error မတက်ဘဲ အောင်မြင်စွာ ပြီးဆုံးသွားမှ true ဖြစ်မှာပါ။
 //Usage: Form ကို Reset ချဖို့ ဒါမှမဟုတ် "Success Message" ပြဖို့ သုံးပါတယ်။
-
-
  //console.log("submitCount", submitCount); //User က Submit ခလုတ်ကို ဘယ်နှစ်ကြိမ် နှိပ်ခဲ့သလဲဆိုတာကို မှတ်ထားပေးပါတယ်။
 
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-sm">
-
+<p>{msg}</p>
       <p>{JSON.stringify(watchvalue, null, 2)}</p>
 
 
       <form onSubmit={handleSubmit(onSubmit,onInvalid)} className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
 
+         
 
+
+         <input type="text" {...register("name")} placeholder="Name ထည့်ပါ" className="border p-2 w-full" />
         <input type="checkbox" {...register("hasSocial")} />
         <p>I have social media</p>
         </div>
@@ -241,10 +248,10 @@ export default function BaseForm() {
 
         <button 
         type="submit" 
-        disabled={!isDirty } // ဘာမှမပြင်ရသေးရင် Submit လုပ်လို့မရအောင် ပိတ်ထားမယ်
+        disabled={!isDirty  || isSubmitting } // ဘာမှမပြင်ရသေးရင် Submit လုပ်လို့မရအောင် ပိတ်ထားမယ်
         className="disabled:bg-gray-400 bg-black text-white p-2"
       >
-        Submit
+        {isSubmitting ? "Submitting..." : "Submit"}
       </button>
         <button type="button" onClick={handleGetValues} className="bg-black text-white p-2 rounded mt-4">
           GetValues
@@ -269,3 +276,4 @@ export default function BaseForm() {
     </div>
   );
 }
+

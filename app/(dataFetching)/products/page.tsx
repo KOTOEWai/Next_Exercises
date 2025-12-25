@@ -1,4 +1,4 @@
-import { getProducts } from "../mongo-db";
+import { getProducts } from "../../(font-example)/mongo-db";
 import ProductsList from "./productList";
 
 export default async function ProductsPage() {

@@ -2,7 +2,7 @@ import { NextRequest , NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { headers } from "next/headers";
 
-export async function GET(request: NextRequest , response:NextResponse ) {
+export async function GET(request: NextRequest  ) {
      
    // console.log(request);
   //URL ဖတ်မယ်

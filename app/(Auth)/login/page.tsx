@@ -1,3 +1,4 @@
+"use client"
 
 import { login } from '@/actions/login'
 import React from 'react'

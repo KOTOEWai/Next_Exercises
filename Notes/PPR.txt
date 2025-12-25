@@ -1,0 +1,79 @@
+Partial Prerendering (PPR) ဆိုတာ Next.js ရဲ့ အမိုက်စားနည်းပညာသစ်တစ်ခုဖြစ်ပြီး
+Static Content ရဲ့ မြန်ဆန်မှုနဲ့ Dynamic Content ရဲ့ လတ်ဆတ်မှုကို တစ်မျက်နှာတည်းမှာ ပေါင်းစည်းပေးထားတဲ့ Feature ဖြစ်ပါတယ်။
+
+ရိုးရိုးရှင်းရှင်းပြောရရင် Website တစ်ခုကို ဝင်လိုက်တဲ့အခါ မပြောင်းလဲတဲ့အပိုင်းတွေ (ဥပမာ- Sidebar, Navbar) ကို ချက်ချင်းမြင်ရအောင်လုပ်ပြီး၊
+ဒေတာအမြဲပြောင်းနေတဲ့အပိုင်းတွေ (ဥပမာ- Shopping Cart, User Profile) ကိုတော့ နောက်ကွယ်ကနေ ဆွဲတင်ပေးတဲ့စနစ်ပါ။
+
+၁။ PPR ဘယ်လို အလုပ်လုပ်သလဲ?
+
+PPR က React ရဲ့ Suspense ပေါ်မှာ အခြေခံထားပါတယ်။ Next.js က Build လုပ်တဲ့အချိန်မှာ
+သင့်ရဲ့ Page ကို အပိုင်း (၂) ပိုင်း ခွဲလိုက်ပါတယ်-
+
+Static Shell:
+
+Suspense boundary ရဲ့ အပြင်ဘက်မှာရှိတဲ့ အပိုင်းတွေကို Static အဖြစ် ကြိုတင် Render လုပ်ထားပါတယ်။ User ဝင်လာတာနဲ့ ဒါကို ချက်ချင်းပြပါတယ်။
+
+Dynamic Islands:
+
+Suspense boundary ရဲ့ အတွင်းထဲက အပိုင်းတွေကိုတော့ dynamic အဖြစ် သတ်မှတ်ပြီး User က Page ကို 
+တောင်းဆိုတဲ့ (Request) အချိန်ကျမှသာ Render လုပ်ပါတယ်။
+
+
+၂။ PPR ကို ဘယ်လို အသုံးပြုမလဲ?
+
+PPR ကို အသုံးပြုဖို့အတွက် သင်ကိုယ်တိုင် Code တွေအများကြီး ပြင်စရာမလိုပါဘူး။
+ ဒေတာ fetch လုပ်မယ့် component ကို Suspense နဲ့ ပတ်ပေးရုံပါပဲ။
+
+TypeScript
+
+// app/dashboard/page.tsx
+import { Suspense } from 'react';
+import { StaticNavbar, DynamicUserStats, SkeletonLoader } from './components';
+
+export default function Page() {
+  return (
+    <main>
+      {/* ဤအပိုင်းသည် Static ဖြစ်ပြီး ချက်ချင်းတက်လာမည် */}
+      <StaticNavbar />
+
+      <h1>Dashboard</h1>
+
+      {/* ဤအပိုင်းသည် Dynamic ဖြစ်ပြီး ပြီးမှတက်လာမည် */}
+      <Suspense fallback={<SkeletonLoader />}>
+        <DynamicUserStats />
+      </Suspense>
+    </main>
+  );
+}
+
+
+၃။ PPR ရဲ့ အကျိုးကျေးဇူးများ
+
+Fast TTFB (Time to First Byte):
+ Server ကနေ Static shell ကို ချက်ချင်း ပို့ပေးနိုင်တဲ့အတွက် User က Website တက်မလာသေးဘဲ အဖြူရောင် Screen ကြီးကို စောင့်ကြည့်နေစရာ မလိုတော့ပါဘူး။
+
+No Configuration Needed:
+အရင်ကလို force-dynamic သို့မဟုတ် revalidate တွေကို တစ်မျက်နှာလုံးအတွက် လိုက်သတ်မှတ်စရာမလိုဘဲ Component အဆင့်မှာတင် Next.js က
+အလိုအလျောက် ခွဲခြားပေးပါတယ်။
+
+
+Improved UX: 
+User က Website ကို ချက်ချင်းမြင်ရပြီးမှ ဒေတာတွေက တစ်ခုချင်းစီ ဖြည့်လာတာမျိုးဖြစ်လို့ ပိုပြီး Smooth ဖြစ်တယ်လို့ ခံစားရစေပါတယ်။
+
+၄။ အရေးကြီးသော မှတ်ချက်
+လက်ရှိမှာ PPR က Experimental Feature အဆင့်မှာပဲ ရှိပါသေးတယ်။ ဒါကို စမ်းသုံးချင်ရင် next.config.js မှာ အောက်ပါအတိုင်း ဖွင့်ပေးရပါတယ်။
+
+JavaScript
+
+// next.config.mjs
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    ppr: 'incremental', // သို့မဟုတ် true
+  },
+};
+
+export default nextConfig;
+💡 အနှစ်ချုပ်
+Partial Prerendering ဆိုတာ Static ရဲ့ မြန်ဆန်မှု နဲ့ Dynamic ရဲ့ စွမ်းဆောင်ရည် နှစ်ခုလုံးကို အပေးအယူ (Trade-off) လုပ်စရာမလိုဘဲ ရရှိစေတဲ့ 
+နည်းပညာဖြစ်ပါတယ်။
