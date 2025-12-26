@@ -1,18 +1,58 @@
 "use client"
-
-import { login } from '@/actions/login'
+import { signIn } from 'next-auth/react'
+import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react'
-import { useFormState } from 'react-dom'
+import {useForm }from "react-hook-form"
+import { z } from "zod";
+import { useRouter } from 'next/navigation';
+const loginSchema = z.object({
+   email: z.string().email("Invalid email format"),
+   password: z.string().min(6, "Password must be at least 6 characters")
+   
+})
+export type LoginValues = z.infer<typeof loginSchema>
+
+
+
 
 export default function page() {
+  const router = useRouter()
 
-   
+   const { register, handleSubmit, formState: { errors , isSubmitting }} = useForm<LoginValues>({
+     resolver: zodResolver(loginSchema),
+     defaultValues: {
+       email: '',
+       password: ''
+     }
+   });
+
+   const onSubmit = async ( data: LoginValues ) => {
+    try{
+       const res = await signIn('credentials',
+          {
+            email: data.email, 
+            password: data.password,
+            redirect: false
+          },
+         );
+        if(res?.ok){
+            router.push("/");
+        }
+    }catch(error){
+      console.error(error)
+    }
+   }
+  
   return (
     <div>
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="grid md:grid-cols-2 items-center gap-4 max-md:gap-8 max-w-6xl max-md:max-w-lg w-full p-4 [box-shadow:0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
         <div className="md:max-w-md w-full px-4 py-4">
-          <form >
+  
+          <form  onSubmit={handleSubmit(onSubmit)} > 
+            {errors && <p>{errors.email?.message}</p>} 
+             {errors && <p>{errors.password?.message}</p>}
+
             <div className="mb-12">
               <h1 className="text-slate-900 text-3xl font-bold">Sign in</h1>
               <p className="text-[15px] mt-6 text-slate-600">Don't have an account <a href="javascript:void(0);" className="text-blue-600 font-medium hover:underline ml-1 whitespace-nowrap">Register here</a></p>
@@ -21,7 +61,11 @@ export default function page() {
             <div>
               <label className="text-slate-900 text-[13px] font-medium block mb-2">Email</label>
               <div className="relative flex items-center">
-                <input name="email" type="text" required className="w-full text-slate-900 text-sm border-b border-slate-300 focus:border-blue-600 pl-2 pr-8 py-3 outline-none" placeholder="Enter email" />
+                <input 
+                 {...register('email',
+
+                 )}
+                name="email" type="text" required className="w-full text-slate-900 text-sm border-b border-slate-300 focus:border-blue-600 pl-2 pr-8 py-3 outline-none" placeholder="Enter email" />
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-2" viewBox="0 0 682.667 682.667">
                   <defs>
                     <clipPath id="a" clipPathUnits="userSpaceOnUse">
@@ -38,7 +82,9 @@ export default function page() {
             <div className="mt-8">
               <label className="text-slate-900 text-[13px] font-medium block mb-2">Password</label>
               <div className="relative flex items-center">
-                <input name="password" type="password" required className="w-full text-slate-900 text-sm border-b border-slate-300 focus:border-blue-600 pl-2 pr-8 py-3 outline-none" placeholder="Enter password" />
+                <input
+                 {...register('password')}
+                name="password" type="password" required className="w-full text-slate-900 text-sm border-b border-slate-300 focus:border-blue-600 pl-2 pr-8 py-3 outline-none" placeholder="Enter password" />
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-2 cursor-pointer" viewBox="0 0 128 128">
                   <path d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z" data-original="#000000"></path>
                 </svg>
@@ -60,7 +106,7 @@ export default function page() {
 
             <div className="mt-12">
               <button type="submit" className="w-full shadow-xl py-2.5 px-4 text-sm font-medium tracking-wide rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none cursor-pointer">
-                Sign in
+                {isSubmitting ? "Login....." : "Login"}
               </button>
             </div>
 
@@ -115,6 +161,6 @@ export default function page() {
         </div>
       </div>
     </div>
-    </div>
+   </div>
   )
 }

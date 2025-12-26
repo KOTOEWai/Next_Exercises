@@ -7,6 +7,10 @@ import bcrypt from "bcryptjs";
 export interface FormState {
   error?: string;
   success?: string;
+  data?: {
+    email: string;
+    password: string;
+  };
 }
 
 export async function register(
@@ -24,16 +28,11 @@ export async function register(
   if (password.length < 6) {
     return { error: "Password must be at least 6 characters long" };
   }
-  if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-    return { error: "Invalid email address" };
-  }
   
-  
+  try{
 
   
-
   await connectToDB();
-
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return { error: "User already exists" };
@@ -43,7 +42,16 @@ export async function register(
     name,
     email,
     password: hashedPassword,
+    provider: "credentials",
   });
+  
+  return { 
+    success: "User created successfully",
+    data : {email, password},
+  };
 
-  return { success: "User created successfully" };
+  } catch (error) {
+    
+    return { error: "Something went wrong" };
+  }
 }

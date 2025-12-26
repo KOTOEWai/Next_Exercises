@@ -4,12 +4,34 @@
 import { register , FormState} from '@/actions/createUser'
 import React from 'react'
 import { useFormState } from 'react-dom'
+import { useEffect } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 export default function page() {
+  const router = useRouter();
   const intialState : FormState = {
     error: '',
     success: ''
   }
-  const [state, formAction] = useFormState(register, intialState);
+  const [state, formAction , ispending] = useFormState(register, intialState);
+
+  useEffect(() => {
+    const performAutoLogin = async () => {
+       if(state?.success && state?.data) {
+            const res = await signIn('credentials', {
+              email: state.data.email, 
+              password: state.data.password,
+              redirect: false
+            });
+         if(res?.ok){
+            router.push("/")
+         }
+       }
+    }
+    performAutoLogin();
+  }, [state, router]);
+
+
   return (
     <div>
       <div className="bg-white max-w-4xl flex items-center mx-auto md:min-h-screen p-4">
@@ -84,7 +106,7 @@ export default function page() {
 
           <div className="mt-8">
             <button type='submit' className="w-full py-2.5 px-4 tracking-wider text-sm rounded-md text-white bg-slate-800 hover:bg-slate-900 focus:outline-none cursor-pointer">
-              Create an account
+              { ispending ? 'Registering...' : 'Register' }
             </button>
           </div>
           <p className="text-slate-600 text-sm mt-6 text-center">Already have an account? <a href="javascript:void(0);" className="text-blue-600 font-medium hover:underline ml-1">Login here</a></p>
